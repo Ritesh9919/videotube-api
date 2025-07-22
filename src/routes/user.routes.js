@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import { upload } from "../middlewares/multer.middleware.js";
 import { register, login, logout } from "../controllers/user.controller.js";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 router.post(
   "/register",
@@ -18,6 +19,6 @@ router.post(
   register
 );
 router.post("/login", login);
-router.post("/logout", logout);
+router.post("/logout", verifyJwt, logout);
 
 export default router;

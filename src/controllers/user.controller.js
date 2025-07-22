@@ -73,7 +73,7 @@ export const register = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  console.log(email, username);
+
   // validating input
   if (!email || !username) {
     throw new ApiError(400, "username or email is required");
