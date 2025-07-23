@@ -6,6 +6,7 @@ import {
   login,
   logout,
   refreshAccessToken,
+  changeCurrentPassword,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -26,5 +27,6 @@ router.post(
 router.post("/login", login);
 router.post("/logout", verifyJwt, logout);
 router.post("/refresh-token", refreshAccessToken);
+router.post("/change-password", verifyJwt, changeCurrentPassword);
 
 export default router;
