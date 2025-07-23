@@ -10,6 +10,7 @@ import {
   getCurrentUser,
   updateUserAccountDetails,
   updateAvatarImage,
+  updateCoverImage,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -38,6 +39,12 @@ router.put(
   verifyJwt,
   upload.single("avatar"),
   updateAvatarImage
+);
+router.put(
+  "/update-coverImage",
+  verifyJwt,
+  upload.single("coverImage"),
+  updateCoverImage
 );
 
 export default router;
