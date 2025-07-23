@@ -212,3 +212,20 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, req.user, "User fetched successfully"));
 });
+
+export const updateUserAccountDetails = asyncHandler(async (req, res) => {
+  const { email, fullName } = req.body;
+  if (!email || !fullName) {
+    throw new ApiError(400, "Both fields are required");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { $set: { email, fullName } },
+    { new: true }
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User account updated successfully"));
+});
