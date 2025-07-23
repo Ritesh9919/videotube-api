@@ -9,6 +9,7 @@ import {
   changeCurrentPassword,
   getCurrentUser,
   updateUserAccountDetails,
+  updateAvatarImage,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -32,5 +33,11 @@ router.post("/refresh-token", refreshAccessToken);
 router.post("/change-password", verifyJwt, changeCurrentPassword);
 router.get("/current", verifyJwt, getCurrentUser);
 router.put("/update-account-details", verifyJwt, updateUserAccountDetails);
+router.put(
+  "/update-avatar",
+  verifyJwt,
+  upload.single("avatar"),
+  updateAvatarImage
+);
 
 export default router;
