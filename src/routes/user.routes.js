@@ -12,6 +12,7 @@ import {
   updateAvatarImage,
   updateCoverImage,
   getUserChannelProfile,
+  getWatchHistory,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -48,5 +49,6 @@ router.put(
   updateCoverImage
 );
 router.get("/profile", verifyJwt, getUserChannelProfile);
+router.get("/watchHistory", verifyJwt, getWatchHistory);
 
 export default router;
