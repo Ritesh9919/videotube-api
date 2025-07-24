@@ -28,7 +28,7 @@ router.post(
 );
 router.get("/:videoId", verifyJwt, getVideoById);
 router.get("/", getAllVideos);
-router.put("/:videoId", verifyJwt, updateVideo);
+router.put("/:videoId", verifyJwt, upload.single("thumbnail"), updateVideo);
 router.delete("/videoId", verifyJwt, deleteVideo);
 router.post("/toggle/publish", verifyJwt, togglePublishStatus);
 

@@ -64,6 +64,37 @@ const getVideoById = asyncHandler(async (req, res) => {
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: update video details like title, description, thumbnail
+  const { title, description } = req.body;
+  if (!title || !description) {
+    throw new ApiError(400, "title or description is required");
+  }
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(400, "Invalid videoId");
+  }
+
+  const existedVideo = await Video.findById(videoId);
+  if (!req.user._id.equals(existedVideo.owner)) {
+    throw new ApiError(400, "You can only update your uploded video");
+  }
+
+  const thumbnailLocalPath = req.file?.path;
+  if (!thumbnailLocalPath) {
+    throw new ApiError(400, "Thumbnail file is required");
+  }
+
+  const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+  if (!thumbnail) {
+    throw new ApiError(400, "error uploading thumbnail on cloudinary");
+  }
+
+  const video = await Video.findByIdAndUpdate(
+    videoId,
+    { $set: { title, description, thumbnail: thumbnail.url } },
+    { new: true }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, video, "Video updated successfully"));
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {
