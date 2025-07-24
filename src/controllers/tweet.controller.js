@@ -18,6 +18,10 @@ const createTweet = asyncHandler(async (req, res) => {
 
 const getUserTweets = asyncHandler(async (req, res) => {
   // TODO: get user tweets
+  const tweets = await Tweet.find({ owner: req.user._id });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweets, "User tweets fetched"));
 });
 
 const updateTweet = asyncHandler(async (req, res) => {
