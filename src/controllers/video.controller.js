@@ -73,6 +73,9 @@ const updateVideo = asyncHandler(async (req, res) => {
   }
 
   const existedVideo = await Video.findById(videoId);
+  if (!existedVideo) {
+    throw new ApiError(404, "Video not found");
+  }
   if (!req.user._id.equals(existedVideo.owner)) {
     throw new ApiError(400, "You can only update your uploded video");
   }
@@ -100,10 +103,39 @@ const updateVideo = asyncHandler(async (req, res) => {
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: delete video
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(400, "Invalid videoId");
+  }
+
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+  if (!req.user._id.equals(video.owner)) {
+    throw new ApiError(400, "You can only update your uploded video");
+  }
+
+  await Video.findByIdAndDelete(videoId);
+  return res.status(200).json(new ApiResponse(200, {}, "Video deleted"));
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(400, "Invalid videoId");
+  }
+
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+  if (!req.user._id.equals(video.owner)) {
+    throw new ApiError(400, "Only video owner can change status");
+  }
+
+  video.isPublished = !video.isPublished;
+  await video.save();
+  return res.status(200).json(new ApiResponse(200, {}, "Toggled status"));
 });
 
 export {
