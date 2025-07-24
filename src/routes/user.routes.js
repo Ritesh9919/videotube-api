@@ -11,6 +11,7 @@ import {
   updateUserAccountDetails,
   updateAvatarImage,
   updateCoverImage,
+  getUserChanelProfile,
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -46,5 +47,6 @@ router.put(
   upload.single("coverImage"),
   updateCoverImage
 );
+router.get("/profile", verifyJwt, getUserChanelProfile);
 
 export default router;
