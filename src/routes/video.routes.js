@@ -19,7 +19,7 @@ router.post(
       maxCount: 1,
     },
     {
-      name: "thumbnain",
+      name: "thumbnail",
       maxCount: 1,
     },
   ]),
