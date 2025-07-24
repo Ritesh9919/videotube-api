@@ -274,8 +274,11 @@ export const updateCoverImage = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "cover image updated"));
 });
 
-export const getUserChanelProfile = asyncHandler(async (req, res) => {
+export const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.body;
+  if (!username) {
+    throw new ApiError(400, "username is missing");
+  }
   const chanel = await User.aggregate([
     {
       $match: {
@@ -328,6 +331,10 @@ export const getUserChanelProfile = asyncHandler(async (req, res) => {
     },
   ]);
 
-  console.log(chanel);
-  res.send("done");
+  if (!chanel.length) {
+    throw new ApiError(404, "Channel does not exist");
+  }
+  return res
+    .status(200)
+    .json(200, chanel[0], "User channel fetched successfully");
 });
