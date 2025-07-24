@@ -10,7 +10,7 @@ import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 router.post("/", verifyJwt, createTweet);
 router.get("/", verifyJwt, getUserTweets);
-router.put("/:tweet", verifyJwt, updateTweet);
+router.put("/:tweetId", verifyJwt, updateTweet);
 router.delete("/:tweetId", verifyJwt, deleteTweet);
 
 export default router;
