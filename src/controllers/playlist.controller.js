@@ -86,13 +86,43 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
 const deletePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
-  // TODO: delete playlist
+
+  const existedPlaylist = await Playlist.findById(playlistId);
+  if (!existedPlaylist) {
+    throw new ApiError(404, "Playlist not found");
+  }
+
+  if (!req.user._id.equals(existedPlaylist.owner)) {
+    throw new ApiError(400, "You can't delete other's playlist");
+  }
+
+  await Playlist.findByIdAndDelete(playlistId);
+  return res.status(200).json(new ApiResponse(200, {}, "playlist deleted"));
 });
 
 const updatePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   const { name, description } = req.body;
-  //TODO: update playlist
+  if (!name || !description) {
+    throw new ApiError(400, "Both fields are required");
+  }
+  const existedPlaylist = await Playlist.findById(playlistId);
+  if (!existedPlaylist) {
+    throw new ApiError(404, "Playlist not found");
+  }
+
+  if (!req.user._id.equals(existedPlaylist.owner)) {
+    throw new ApiError(400, "You can't update other's playlist");
+  }
+
+  const playlist = await Playlist.findByIdAndUpdate(
+    playlistId,
+    { $set: { name, description } },
+    { new: true }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, playlist, "playlist updated"));
 });
 
 export {
