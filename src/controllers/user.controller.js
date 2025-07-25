@@ -280,7 +280,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
   if (!username) {
     throw new ApiError(400, "username is missing");
   }
-  const chanel = await User.aggregate([
+  const channel = await User.aggregate([
     {
       $match: {
         username: username.toLowerCase(),
@@ -332,12 +332,14 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
   ]);
 
-  if (!chanel.length) {
+  if (!channel.length) {
     throw new ApiError(404, "Channel does not exist");
   }
   return res
     .status(200)
-    .json(200, chanel[0], "User channel fetched successfully");
+    .json(
+      new ApiResponse(200, channel[0], "User channel fetched successfully")
+    );
 });
 
 export const getWatchHistory = asyncHandler(async (req, res) => {
