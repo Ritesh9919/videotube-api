@@ -45,10 +45,45 @@ const addComment = asyncHandler(async (req, res) => {
 
 const updateComment = asyncHandler(async (req, res) => {
   // TODO: update a comment
+  const { commentId } = req.params;
+  const { content } = req.body;
+  if (!content) {
+    throw new ApiError(400, "content is required");
+  }
+  const existedComment = await Comment.findById(commentId);
+  if (!existedComment) {
+    throw new ApiError(400, "comment not found");
+  }
+
+  if (!req.user._id.equals(existedComment.owner)) {
+    throw new ApiError(400, "You can't update other's comment");
+  }
+
+  const comment = await Comment.findByIdAndUpdate(
+    commentId,
+    { $set: { content } },
+    { new: true }
+  );
+
+  return res.status(200).json(new ApiResponse(200, comment, "comment updated"));
 });
 
 const deleteComment = asyncHandler(async (req, res) => {
   // TODO: delete a comment
+  const { commentId } = req.params;
+
+  const existedComment = await Comment.findById(commentId);
+  if (!existedComment) {
+    throw new ApiError(400, "comment not found");
+  }
+
+  if (!req.user._id.equals(existedComment.owner)) {
+    throw new ApiError(400, "You can't delete other's comment");
+  }
+
+  await Comment.findByIdAndDelete(commentId);
+
+  return res.status(200).json(new ApiResponse(200, {}, "comment deleted"));
 });
 
 export { getVideoComments, addComment, updateComment, deleteComment };
