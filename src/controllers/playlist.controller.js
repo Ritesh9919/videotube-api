@@ -12,7 +12,11 @@ const createPlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Both fields are required");
   }
 
-  const playlist = await Playlist({ name, description, owner: req.user._id });
+  const playlist = await Playlist.create({
+    name,
+    description,
+    owner: req.user._id,
+  });
   return res
     .status(201)
     .json(new ApiResponse(200, playlist, "Playlist created"));
@@ -21,11 +25,22 @@ const createPlaylist = asyncHandler(async (req, res) => {
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   //TODO: get user playlists
+  const playlists = await Playlist.find({ owner: userId });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, playlists, "playlists fetched"));
 });
 
 const getPlaylistById = asyncHandler(async (req, res) => {
   const { playlistId } = req.params;
   //TODO: get playlist by id
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) {
+    throw new ApiError(404, "playlist not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, playlist, "playlist fetched"));
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
