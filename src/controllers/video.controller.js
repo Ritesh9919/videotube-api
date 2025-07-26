@@ -55,7 +55,11 @@ const getVideoById = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid videoId");
   }
 
-  const video = await Video.findById(videoId);
+  const video = await Video.findByIdAndUpdate(
+    videoId,
+    { $inc: { views: 1 } },
+    { new: true }
+  );
   const user = await User.findById(req.user._id);
   user.watchHistory.push(video._id);
   await user.save();
