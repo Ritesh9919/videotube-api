@@ -10,6 +10,7 @@ import commentRouter from "./routes/comment.routes.js";
 import playlistRouter from "./routes/playlist.routes.js";
 import subscriptionController from "./routes/subscription.routes.js";
 import likeController from "./routes/like.routes.js";
+import dashboardRouter from "./routes/dashboard.routes.js";
 
 const app = express();
 app.use(express.json({ limit: "16kb" }));
@@ -30,5 +31,6 @@ app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/playlists", playlistRouter);
 app.use("/api/v1/subscriptions", subscriptionController);
 app.use("/api/v1/likes", likeController);
+app.use("/api/v1/dashboards", dashboardRouter);
 
 export { app };
