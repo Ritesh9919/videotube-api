@@ -24,6 +24,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("<h1>API is working</h1>");
+});
+
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/tweets", tweetRouter);
